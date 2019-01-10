@@ -10,6 +10,7 @@ setup(name='mmp',
       packages=['mmp'],
       install_requires=[
         'pandas',
+        'sklearn',
       ],
       zip_safe=False)
       

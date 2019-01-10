@@ -108,3 +108,5 @@ dtypes_float_to_cat = [
 ]
 
 import mmp.load_data
+import mmp.preprocessing
+import mmp.analysis
