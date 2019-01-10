@@ -8,5 +8,8 @@ setup(name='mmp',
       author_email='',
       license='',
       packages=['mmp'],
+      install_requires=[
+        'pandas',
+      ],
       zip_safe=False)
       

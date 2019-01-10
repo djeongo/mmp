@@ -1,109 +1,63 @@
-dtypes = {
-        'MachineIdentifier':                                    'category',
-        'ProductName':                                          'category',
-        'EngineVersion':                                        'category',
-        'AppVersion':                                           'category',
-        'AvSigVersion':                                         'category',
-        'IsBeta':                                               'int8',
-        'RtpStateBitfield':                                     'float16',
-        'IsSxsPassiveMode':                                     'int8',
-        'DefaultBrowsersIdentifier':                            'float16',
-        'AVProductStatesIdentifier':                            'float32',
-        'AVProductsInstalled':                                  'float16',
-        'AVProductsEnabled':                                    'float16',
-        'HasTpm':                                               'int8',
-        'CountryIdentifier':                                    'int16',
-        'CityIdentifier':                                       'float32',
-        'OrganizationIdentifier':                               'float16',
-        'GeoNameIdentifier':                                    'float16',
-        'LocaleEnglishNameIdentifier':                          'int8',
-        'Platform':                                             'category',
-        'Processor':                                            'category',
-        'OsVer':                                                'category',
-        'OsBuild':                                              'int16',
-        'OsSuite':                                              'int16',
-        'OsPlatformSubRelease':                                 'category',
-        'OsBuildLab':                                           'category',
-        'SkuEdition':                                           'category',
-        'IsProtected':                                          'float16',
-        'AutoSampleOptIn':                                      'int8',
-        'PuaMode':                                              'category',
-        'SMode':                                                'float16',
-        'IeVerIdentifier':                                      'float16',
-        'SmartScreen':                                          'category',
-        'Firewall':                                             'float16',
-        'UacLuaenable':                                         'float32',
-        'Census_MDC2FormFactor':                                'category',
-        'Census_DeviceFamily':                                  'category',
-        'Census_OEMNameIdentifier':                             'float16',
-        'Census_OEMModelIdentifier':                            'float32',
-        'Census_ProcessorCoreCount':                            'float16',
-        'Census_ProcessorManufacturerIdentifier':               'float16',
-        'Census_ProcessorModelIdentifier':                      'float16',
-        'Census_ProcessorClass':                                'category',
-        'Census_PrimaryDiskTotalCapacity':                      'float32',
-        'Census_PrimaryDiskTypeName':                           'category',
-        'Census_SystemVolumeTotalCapacity':                     'float32',
-        'Census_HasOpticalDiskDrive':                           'int8',
-        'Census_TotalPhysicalRAM':                              'float32',
-        'Census_ChassisTypeName':                               'category',
-        'Census_InternalPrimaryDiagonalDisplaySizeInInches':    'float16',
-        'Census_InternalPrimaryDisplayResolutionHorizontal':    'float16',
-        'Census_InternalPrimaryDisplayResolutionVertical':      'float16',
-        'Census_PowerPlatformRoleName':                         'category',
-        'Census_InternalBatteryType':                           'category',
-        'Census_InternalBatteryNumberOfCharges':                'float32',
-        'Census_OSVersion':                                     'category',
-        'Census_OSArchitecture':                                'category',
-        'Census_OSBranch':                                      'category',
-        'Census_OSBuildNumber':                                 'int16',
-        'Census_OSBuildRevision':                               'int32',
-        'Census_OSEdition':                                     'category',
-        'Census_OSSkuName':                                     'category',
-        'Census_OSInstallTypeName':                             'category',
-        'Census_OSInstallLanguageIdentifier':                   'float16',
-        'Census_OSUILocaleIdentifier':                          'int16',
-        'Census_OSWUAutoUpdateOptionsName':                     'category',
-        'Census_IsPortableOperatingSystem':                     'int8',
-        'Census_GenuineStateName':                              'category',
-        'Census_ActivationChannel':                             'category',
-        'Census_IsFlightingInternal':                           'float16',
-        'Census_IsFlightsDisabled':                             'float16',
-        'Census_FlightRing':                                    'category',
-        'Census_ThresholdOptIn':                                'float16',
-        'Census_FirmwareManufacturerIdentifier':                'float16',
-        'Census_FirmwareVersionIdentifier':                     'float32',
-        'Census_IsSecureBootEnabled':                           'int8',
-        'Census_IsWIMBootEnabled':                              'float16',
-        'Census_IsVirtualDevice':                               'float16',
-        'Census_IsTouchEnabled':                                'int8',
-        'Census_IsPenCapable':                                  'int8',
-        'Census_IsAlwaysOnAlwaysConnectedCapable':              'float16',
-        'Wdft_IsGamer':                                         'float16',
-        'Wdft_RegionIdentifier':                                'float16',
-        'HasDetections':                                        'int8'
-        }
+import pandas as pd
+import mmp
 
-dtypes_float_to_cat = [
-    'Wdft_IsGamer',
-    'Census_IsAlwaysOnAlwaysConnectedCapable',
-    'IsProtected',
-    'SMode',
-    'Census_IsVirtualDevice',
-    'Firewall',
-    'Census_IsFlightsDisabled',
-    'Census_ProcessorManufacturerIdentifier',
-    'RtpStateBitfield',
-#     'AVProductsEnabled',
-    'UacLuaenable',
-    'Wdft_RegionIdentifier',
-    'Census_OSInstallLanguageIdentifier',
-    'GeoNameIdentifier',
-    'Census_FirmwareManufacturerIdentifier',
-    'Census_OEMNameIdentifier',
-    'Census_ProcessorModelIdentifier',
-    'AVProductStatesIdentifier',
-    'CityIdentifier',
-    'Census_OEMModelIdentifier'
-]
+def init():
+  
+  # define dtype of each column
+  df = pd.read_csv('../input/train.csv', nrows=10)
+  mmp.columns = list(df.columns)
+  mmp.columns.remove('MachineIdentifier')
+  mmp.columns.remove('OsBuildLab')
+  mmp.columns.remove('PuaMode')
+  mmp.columns.remove('Census_ProcessorClass')
+  mmp.columns.remove('DefaultBrowsersIdentifier')
+  mmp.columns.remove('Census_IsFlightingInternal')
+  mmp.columns.remove('Census_InternalBatteryType')
+  mmp.columns.remove('Census_ThresholdOptIn')
+  mmp.columns.remove('Census_IsWIMBootEnabled')
+  mmp.columns.remove('SmartScreen') # Too many NaN, 3177011
+  mmp.columns.remove('OrganizationIdentifier') # Too many NaN, 2751518
+  
+  # log vals 
+  NUM_VER = 4 # number of numeric values in version strings
+  log_vals ={
+      'AvSigVersion': {0: 0.0, 1: 3.0, 2: 4.0, 3: 0},
+      'AppVersion': {0: 1.0, 1: 2.0, 2: 5.0, 3: 5.0},
+      'EngineVersion': {0: 0.0, 1: 0.0, 2: 5.0, 3: 1.0},
+      'Census_OSVersion': {0: 1.0, 1: 0, 2: 5.0, 3: 5.0},
+      'OsVer': {0: 1.0, 1: 1.0, 2: 2.0, 3: 2.0}}
+  
+  def ver_to_int(row, col):
+      try:
+          tokens = [int(x) for x in row.split('.')]
+      except:
+          return 0
+      int_ver = 0
+      cum_mult = 0
+      for i in range(NUM_VER-1,-1,-1):
+          int_ver += tokens[i]*(10**cum_mult)
+          cum_mult += log_vals[col][i]
+      return int(int_ver)
+  
+  def ver_to_int_AvSigVersion(row): return ver_to_int(row, 'AvSigVersion')
+  def ver_to_int_AppVersion(row): return ver_to_int(row, 'AppVersion')
+  def ver_to_int_EngineVersion(row): return ver_to_int(row, 'EngineVersion')
+  def ver_to_int_Census_OSVersion(row): return ver_to_int(row, 'Census_OSVersion')
+  def ver_to_int_OsVer(row): return ver_to_int(row, 'OsVer')
+  
+  converters = {
+      'AvSigVersion': ver_to_int_AvSigVersion,
+      'AppVersion': ver_to_int_AppVersion,
+      'EngineVersion': ver_to_int_EngineVersion,
+      'Census_OSVersion': ver_to_int_Census_OSVersion,
+      'OsVer': ver_to_int_OsVer}
 
+
+def load_data(nrows):
+  df_train = pd.read_csv('../input/train.csv',
+                       dtype=mmp.dtypes,
+                       usecols=mmp.columns,
+#                        converters=converters,
+                       nrows=nrows
+                      )
+  return df_train
