@@ -1,1 +1,1 @@
-import load_data
+import mmp.load_data
