@@ -1,10 +1,9 @@
 import pandas as pd
 import mmp
 
-def init():
-  
+def init(train_csv):
   # define dtype of each column
-  df = pd.read_csv('../input/train.csv', nrows=10)
+  df = pd.read_csv(train_csv, nrows=10)
   mmp.columns = list(df.columns)
   mmp.columns.remove('MachineIdentifier')
   mmp.columns.remove('OsBuildLab')
@@ -53,8 +52,8 @@ def init():
       'OsVer': ver_to_int_OsVer}
 
 
-def load_data(nrows):
-  df_train = pd.read_csv('../input/train.csv',
+def load_data(train_csv, nrows):
+  df_train = pd.read_csv(train_csv,
                        dtype=mmp.dtypes,
                        usecols=mmp.columns,
 #                        converters=converters,

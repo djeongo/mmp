@@ -108,5 +108,3 @@ dtypes_float_to_cat = [
 ]
 
 import mmp.load_data
-
-mmp.load_data.init()
