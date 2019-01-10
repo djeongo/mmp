@@ -53,6 +53,7 @@ def init(train_csv):
 
 
 def load_data(train_csv, nrows):
+  init(train_csv)
   df_train = pd.read_csv(train_csv,
                        dtype=mmp.dtypes,
                        usecols=mmp.columns,
